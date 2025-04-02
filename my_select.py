@@ -109,8 +109,9 @@ def select_10(student_name, teacher_name):
     """Список курсів, які певному студенту читає певний викладач."""
     db = SessionLocal()
     try:
-        result = db.query(Subject.name).join(Grade).join(Student).join(Teacher)\
+        result = db.query(Subject.name).join(Grade).join(Student).join(Teacher, Teacher.id == Subject.teacher_id) \
             .filter(Student.name == student_name, Teacher.name == teacher_name).all()
         return result
     finally:
         db.close()
+

@@ -7,6 +7,27 @@ faker = Faker()
 
 db = SessionLocal()
 
+groups_exist = db.query(Group).count() > 0
+teachers_exist = db.query(Teacher).count() > 0
+subjects_exist = db.query(Subject).count() > 0
+students_exist = db.query(Student).count() > 0
+
+if groups_exist or teachers_exist or subjects_exist or students_exist:
+    user_choice = input("База не порожня. Хочете додати нові дані (A) чи переписати існуючі (R)? (A/R): ").strip().lower()
+    if user_choice == "r":
+        db.query(Group).delete()
+        db.query(Teacher).delete()
+        db.query(Subject).delete()
+        db.query(Student).delete()
+        db.query(Grade).delete()
+        db.commit()
+        print("Існуючі дані переписано.")
+    elif user_choice != "a":
+        print("Невірний вибір. Завершення роботи.")
+        exit()
+else:
+    print("База порожня. Додаємо нові дані.")
+
 groups = [Group(name=f"Group {i}") for i in range(1, 4)]
 db.add_all(groups)
 db.commit()
